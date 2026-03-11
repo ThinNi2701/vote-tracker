@@ -1,0 +1,397 @@
+{
+  "elections": [
+    {
+      "id": "xa-van-ninh-2026",
+      "name": "Bau cu Dai bieu HDND xa Van Ninh 2026",
+      "seats": 5,
+      "picksAllowed": 3,
+      "candidates": [
+        "Nguyen Van Danh",
+        "Nguyen Thi Hien Lam",
+        "Dang Thi Hong Phuong",
+        "Le Xuan Tran",
+        "Nguyen Quoc Tuan"
+      ],
+      "ballots": [
+        {
+          "id": "bb2b2fc5-6345-4bb8-aad2-f1cd79dbd59e",
+          "crossedOut": [],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": false,
+          "createdAt": "2026-03-10T16:14:31.010Z"
+        },
+        {
+          "id": "62422d60-261d-429d-9adf-fc58195a0126",
+          "crossedOut": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam"
+          ],
+          "selected": [
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:14:43.077Z"
+        },
+        {
+          "id": "09fa2b0c-3e7f-4e9d-bc6f-d365bc08a42e",
+          "crossedOut": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam"
+          ],
+          "selected": [
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:14:46.451Z"
+        },
+        {
+          "id": "e2d41043-443a-4ee5-b903-4a7fc41659d5",
+          "crossedOut": [
+            "Nguyen Van Danh",
+            "Dang Thi Hong Phuong"
+          ],
+          "selected": [
+            "Nguyen Thi Hien Lam",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:14:49.249Z"
+        },
+        {
+          "id": "b2bfa427-3100-454f-9d1f-5e7b7ff548e7",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Nguyen Van Danh"
+          ],
+          "selected": [
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:14:52.348Z"
+        },
+        {
+          "id": "3608acb0-09bb-4313-90ed-c7c2e4c26dcd",
+          "crossedOut": [
+            "Nguyen Van Danh",
+            "Le Xuan Tran"
+          ],
+          "selected": [
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:14:55.132Z"
+        },
+        {
+          "id": "5ce2ca1e-d158-4387-b081-9b98444e4ea0",
+          "crossedOut": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam"
+          ],
+          "selected": [
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:15:25.746Z"
+        },
+        {
+          "id": "9d0ec58d-9f01-4664-bc51-296169baf779",
+          "crossedOut": [
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:15:28.261Z"
+        },
+        {
+          "id": "b9edc5dc-d332-4f1a-8a05-b914a74bf74c",
+          "crossedOut": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam"
+          ],
+          "selected": [
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:08.007Z"
+        },
+        {
+          "id": "bb7bd98b-869d-4ab1-99bf-d9cb02481dc0",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Le Xuan Tran"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:09.826Z"
+        },
+        {
+          "id": "6a9dfebb-8873-46d2-8aa5-544faacde383",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Le Xuan Tran"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:11.605Z"
+        },
+        {
+          "id": "b1b7810d-96ee-4aa1-a8e2-cb01fb3d9334",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Le Xuan Tran"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:13.872Z"
+        },
+        {
+          "id": "87f7494d-ba51-4dc0-a84e-63a9ec4fd272",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Le Xuan Tran"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:16.885Z"
+        },
+        {
+          "id": "bad095b1-771b-4ff1-b138-3803f835893f",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Le Xuan Tran"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:18.547Z"
+        },
+        {
+          "id": "fb68e6a6-f93a-4a98-9aae-b25c1f444af3",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Dang Thi Hong Phuong"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Le Xuan Tran"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:20.510Z"
+        },
+        {
+          "id": "9bba3160-dd7b-43ae-9b3a-9b70f288bb76",
+          "crossedOut": [
+            "Nguyen Thi Hien Lam",
+            "Le Xuan Tran"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Dang Thi Hong Phuong",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:22.428Z"
+        },
+        {
+          "id": "61078d97-5e67-4fe4-8e81-eff91e8c01c0",
+          "crossedOut": [
+            "Dang Thi Hong Phuong",
+            "Nguyen Quoc Tuan"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Le Xuan Tran"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:24.258Z"
+        },
+        {
+          "id": "6cf29853-ff29-4c7c-9890-37edf77b8514",
+          "crossedOut": [
+            "Nguyen Thi Hien Lam",
+            "Dang Thi Hong Phuong"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:26.005Z"
+        },
+        {
+          "id": "505dcbec-3915-4d5a-af08-d71c615a5668",
+          "crossedOut": [
+            "Le Xuan Tran",
+            "Dang Thi Hong Phuong"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:27.693Z"
+        },
+        {
+          "id": "4c9da80d-b92a-428f-832e-0feff525799c",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Dang Thi Hong Phuong"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Le Xuan Tran"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:29.353Z"
+        },
+        {
+          "id": "71c805c5-c27f-4ee2-bf0a-0f5fad52563b",
+          "crossedOut": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam"
+          ],
+          "selected": [
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:34.172Z"
+        },
+        {
+          "id": "d9789ec9-2d70-41e4-bcce-5c1218b567fe",
+          "crossedOut": [
+            "Nguyen Thi Hien Lam",
+            "Nguyen Van Danh"
+          ],
+          "selected": [
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:35.883Z"
+        },
+        {
+          "id": "13ec2ded-de5a-4e19-b7fd-9677499b95a3",
+          "crossedOut": [
+            "Dang Thi Hong Phuong",
+            "Nguyen Thi Hien Lam"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Le Xuan Tran",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:37.647Z"
+        },
+        {
+          "id": "fe1a49a6-51da-4f0d-8fe0-8cdebdf30540",
+          "crossedOut": [
+            "Le Xuan Tran",
+            "Dang Thi Hong Phuong"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Nguyen Thi Hien Lam",
+            "Nguyen Quoc Tuan"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:39.079Z"
+        },
+        {
+          "id": "031e5c35-3ce2-4ab7-91ab-9c3eb0b41716",
+          "crossedOut": [
+            "Nguyen Quoc Tuan",
+            "Nguyen Thi Hien Lam"
+          ],
+          "selected": [
+            "Nguyen Van Danh",
+            "Dang Thi Hong Phuong",
+            "Le Xuan Tran"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:16:40.748Z"
+        }
+      ],
+      "createdAt": "2026-03-10T16:10:53.018Z"
+    },
+    {
+      "id": "25082a4f-460a-47c5-b2f6-c6b55d0f35bf",
+      "name": "Bau cu thu nghiem",
+      "seats": 4,
+      "picksAllowed": 2,
+      "candidates": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "ballots": [
+        {
+          "id": "bb4049ea-9a53-463c-83cf-bfc51e7830ca",
+          "crossedOut": [
+            "C",
+            "D"
+          ],
+          "selected": [
+            "A",
+            "B"
+          ],
+          "isValid": true,
+          "createdAt": "2026-03-10T16:11:30.775Z"
+        }
+      ],
+      "createdAt": "2026-03-10T16:11:30.769Z"
+    }
+  ]
+}
