@@ -19,6 +19,7 @@ function App() {
   const [token, setToken] = useState('')
   const [currentUser, setCurrentUser] = useState(null)
   const [authBusy, setAuthBusy] = useState(false)
+  const [authBooting, setAuthBooting] = useState(true)
   const [loginForm, setLoginForm] = useState({ username: '', password: '' })
 
   const [elections, setElections] = useState([])
@@ -47,19 +48,43 @@ function App() {
   const requestJson = useMemo(() => requestJsonFactory(token), [token])
 
   useEffect(() => {
-    const raw = localStorage.getItem(SESSION_KEY)
-    if (!raw) {
-      return
-    }
-    try {
-      const parsed = JSON.parse(raw)
-      if (parsed?.token && parsed?.user) {
-        setToken(parsed.token)
-        setCurrentUser(parsed.user)
+    const bootstrapAuth = async () => {
+      const raw = localStorage.getItem(SESSION_KEY)
+      if (!raw) {
+        setAuthBooting(false)
+        return
       }
-    } catch {
-      localStorage.removeItem(SESSION_KEY)
+
+      try {
+        const parsed = JSON.parse(raw)
+        if (!parsed?.token) {
+          localStorage.removeItem(SESSION_KEY)
+          setAuthBooting(false)
+          return
+        }
+
+        const requestWithSavedToken = requestJsonFactory(parsed.token)
+        const profile = await requestWithSavedToken(`${API_BASE_URL}/auth/me`)
+
+        setToken(parsed.token)
+        setCurrentUser(profile)
+        localStorage.setItem(
+          SESSION_KEY,
+          JSON.stringify({
+            token: parsed.token,
+            user: profile,
+          }),
+        )
+      } catch {
+        localStorage.removeItem(SESSION_KEY)
+        setToken('')
+        setCurrentUser(null)
+      } finally {
+        setAuthBooting(false)
+      }
     }
+
+    bootstrapAuth()
   }, [])
 
   const ballotsWithNumber = useMemo(
@@ -241,6 +266,10 @@ function App() {
   }
 
   useEffect(() => {
+    if (authBooting) {
+      return
+    }
+
     if (!token) {
       setLoading(false)
       return
@@ -263,7 +292,7 @@ function App() {
     }
 
     init()
-  }, [token])
+  }, [token, authBooting])
 
   const login = async (event) => {
     event.preventDefault()
@@ -594,6 +623,14 @@ function App() {
   }
 
   if (!token) {
+    if (authBooting) {
+      return (
+        <div className="app-shell">
+          <div className="panel">Đang kiểm tra phiên đăng nhập...</div>
+        </div>
+      )
+    }
+
     return (
       <LoginPage
         loginForm={loginForm}
@@ -708,6 +745,9 @@ function App() {
         <p>
           Cấu trúc phiếu: tổng đại biểu {activeElection?.seats ?? 0}, được chọn{' '}
           {activeElection?.picksAllowed ?? 0}.
+        </p>
+        <p style={{textAlign: 'right', fontStyle: 'italic'}}>
+            © 2026 - Phát triển bởi Nguyen Bao Thien
         </p>
       </footer>
     </div>

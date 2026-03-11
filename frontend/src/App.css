@@ -6,6 +6,26 @@
   
 }
 
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+}
+
+.login-container {
+  width: min(900px, 100%);
+}
+
+.login-main {
+  display: grid;
+  justify-content: center;
+}
+
+.login-panel {
+  width: min(480px, 100%);
+}
+
 .app-header {
   margin-bottom: 24px;
   animation: rise-in 0.55s ease;
