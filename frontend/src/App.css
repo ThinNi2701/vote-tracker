@@ -369,6 +369,18 @@ button:hover {
   font-size: 0.82rem;
 }
 
+.ballot-seq {
+  margin: 0 0 8px;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d8c19a;
+  background: #fff6e6;
+  color: #7a5723;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
 .candidate-line {
   width: 100%;
   margin: 6px 0;
@@ -385,6 +397,22 @@ button:hover {
   color: #7d6641;
 }
 
+.candidate-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.candidate-stt {
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #d9c8a8;
+  background: #fff7e8;
+  color: #7a5921;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
 .candidate-line.crossed {
   text-decoration: line-through;
   text-decoration-thickness: 2px;
@@ -394,6 +422,12 @@ button:hover {
 
 .candidate-line.crossed small {
   color: #b02c2c;
+}
+
+.candidate-line.crossed .candidate-stt {
+  border-color: #ddb2b2;
+  background: #ffecec;
+  color: #9c3232;
 }
 
 .chart-stack {

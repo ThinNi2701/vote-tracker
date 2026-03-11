@@ -178,6 +178,7 @@ function WorkspacePage({
       <section className="panel ballot-panel">
         <h2>Phiếu mô phỏng</h2>
         <div className="ballot-paper">
+          <p className="ballot-seq">Phiếu thứ {totalBallots + 1}</p>
           <p className="ballot-title">Danh sách ứng cử viên</p>
           {(activeElection?.candidates ?? []).map((name, index) => (
             <button
@@ -188,7 +189,9 @@ function WorkspacePage({
               style={{ animationDelay: `${index * 60}ms` }}
             >
               <span>{name}</span>
-              <small>{crossedOut.has(name) ? 'Đã gạch' : 'Còn hiệu lực'}</small>
+              <small className="candidate-meta">
+                <span>{crossedOut.has(name) ? 'Đã gạch' : 'Còn hiệu lực'}</span>
+              </small>
             </button>
           ))}
 
