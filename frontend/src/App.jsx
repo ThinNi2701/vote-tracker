@@ -526,13 +526,7 @@ function App() {
     try {
       setBusy(true)
       const payload = { crossedOut: Array.from(editCrossedOut) }
-      const response = await withAuth(() =>
-        requestJson(`${API_BASE_URL}/elections/${activeElection.id}/ballots/${selectedBallot.displayNumber}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        }),
-      )
+      const response = await updateBallotRequest(activeElection.id, selectedBallot.displayNumber, payload)
       if (!response) {
         return
       }
@@ -568,11 +562,7 @@ function App() {
 
     try {
       setBusy(true)
-      const response = await withAuth(() =>
-        requestJson(`${API_BASE_URL}/elections/${activeElection.id}/ballots/${selectedBallot.displayNumber}`, {
-          method: 'DELETE',
-        }),
-      )
+      const response = await deleteBallotRequest(activeElection.id, selectedBallot.displayNumber)
       if (!response) {
         return
       }
@@ -585,6 +575,48 @@ function App() {
       setNotice(`Không thể xóa lá phiếu: ${error.message}`)
     } finally {
       setBusy(false)
+    }
+  }
+
+  const updateBallotRequest = async (electionId, ballotNumber, payload) => {
+    try {
+      return await withAuth(() =>
+        requestJson(`${API_BASE_URL}/elections/${electionId}/ballots/${ballotNumber}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }),
+      )
+    } catch (error) {
+      if (!error?.status || error.status === 404 || error.status === 405) {
+        return await withAuth(() =>
+          requestJson(`${API_BASE_URL}/elections/${electionId}/ballots/${ballotNumber}/update`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          }),
+        )
+      }
+      throw error
+    }
+  }
+
+  const deleteBallotRequest = async (electionId, ballotNumber) => {
+    try {
+      return await withAuth(() =>
+        requestJson(`${API_BASE_URL}/elections/${electionId}/ballots/${ballotNumber}`, {
+          method: 'DELETE',
+        }),
+      )
+    } catch (error) {
+      if (!error?.status || error.status === 404 || error.status === 405) {
+        return await withAuth(() =>
+          requestJson(`${API_BASE_URL}/elections/${electionId}/ballots/${ballotNumber}/delete`, {
+            method: 'POST',
+          }),
+        )
+      }
+      throw error
     }
   }
 
@@ -635,11 +667,7 @@ function App() {
       setBusy(true)
 
       for (const number of selectedNumbers) {
-        const result = await withAuth(() =>
-          requestJson(`${API_BASE_URL}/elections/${activeElection.id}/ballots/${number}`, {
-            method: 'DELETE',
-          }),
-        )
+        const result = await deleteBallotRequest(activeElection.id, number)
         if (!result) {
           return
         }
