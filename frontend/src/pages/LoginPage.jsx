@@ -5,7 +5,6 @@ function LoginPage({ loginForm, setLoginForm, login, authBusy, notice }) {
         <header className="app-header">
           <p className="eyebrow">Vote Tracker</p>
           <h1>Đăng nhập hệ thống kiểm phiếu</h1>
-          <p>Tài khoản mặc định: admin/admin123 (quản trị), user/user123 (kiểm phiếu).</p>
         </header>
         <main className="login-main">
           <section className="panel creator-panel login-panel">
