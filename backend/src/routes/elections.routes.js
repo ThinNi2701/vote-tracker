@@ -3,6 +3,7 @@ const {
   listElections,
   getElectionById,
   createElection,
+  updateElectionName,
   addBallot,
   updateBallot,
   deleteBallot,
@@ -44,6 +45,18 @@ router.post('/', requireRole('admin'), async (req, res) => {
     return res.status(201).json(result.value);
   } catch (error) {
     return res.status(500).json({ message: 'Không thể tạo cuộc bầu cử.', detail: error.message });
+  }
+});
+
+router.put('/:id/name', requireRole('admin'), async (req, res) => {
+  try {
+    const result = await updateElectionName(req.params.id, req.body);
+    if (!result.ok) {
+      return res.status(result.code ?? 400).json({ message: result.message });
+    }
+    return res.json(result.value);
+  } catch (error) {
+    return res.status(500).json({ message: 'Không thể cập nhật tên cuộc bầu cử.', detail: error.message });
   }
 });
 

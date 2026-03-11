@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
+
 function WorkspacePage({
   activeElection,
+  isAdmin,
   totalBallots,
   totalTrustVotes,
   stats,
@@ -19,6 +22,7 @@ function WorkspacePage({
   toggleSelectAllFiltered,
   clearSelectedBallots,
   deleteSelectedBallots,
+  renameElection,
   setStackModalOpen,
   crossOutHandlers,
 }) {
@@ -31,10 +35,61 @@ function WorkspacePage({
     toggleCandidate,
   } = crossOutHandlers
 
+  const [isRenaming, setIsRenaming] = useState(false)
+  const [renameInput, setRenameInput] = useState('')
+
+  useEffect(() => {
+    setIsRenaming(false)
+    setRenameInput(activeElection?.name ?? '')
+  }, [activeElection?.id, activeElection?.name])
+
+  const submitRenameElection = async (event) => {
+    event.preventDefault()
+    await renameElection(renameInput)
+    setIsRenaming(false)
+  }
+
   return (
     <main className="workspace-grid">
       <section className="panel stats-panel">
-        <h2>{activeElection?.name ?? 'Chưa có cuộc bầu cử'}</h2>
+        <div className="section-title-row">
+          <h2>{activeElection?.name ?? 'Chưa có cuộc bầu cử'}</h2>
+          {isAdmin ? (
+            isRenaming ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRenaming(false)
+                  setRenameInput(activeElection?.name ?? '')
+                }}
+                disabled={busy}
+              >
+                Hủy
+              </button>
+            ) : (
+              <button type="button" onClick={() => setIsRenaming(true)} disabled={busy}>
+                Sửa tên cuộc bầu cử
+              </button>
+            )
+          ) : null}
+        </div>
+
+        {isAdmin && isRenaming ? (
+          <form className="creator-form" onSubmit={submitRenameElection}>
+            <label>
+              Tên cuộc bầu cử mới
+              <input
+                value={renameInput}
+                onChange={(event) => setRenameInput(event.target.value)}
+                placeholder="Nhập tên cuộc bầu cử"
+              />
+            </label>
+            <button type="submit" className="primary-btn" disabled={busy}>
+              Lưu tên mới
+            </button>
+          </form>
+        ) : null}
+
         <div className="metric-bubbles" role="status" aria-label="Tổng quan phiếu bầu">
           <div className="metric-bubble ballots">
             <span>Tổng số phiếu</span>

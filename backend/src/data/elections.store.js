@@ -116,6 +116,31 @@ async function createElection(payload) {
   return { ok: true, value: newElection.toObject() };
 }
 
+async function updateElectionName(electionId, payload) {
+  await ensureSeedData();
+  const election = await Election.findOne({ id: electionId });
+
+  if (!election) {
+    return { ok: false, code: 404, message: 'Không tìm thấy cuộc bầu cử.' };
+  }
+
+  const name = String(payload?.name ?? '').trim();
+  if (!name) {
+    return { ok: false, code: 400, message: 'Tên cuộc bầu cử là bắt buộc.' };
+  }
+
+  election.name = name;
+  await election.save();
+
+  return {
+    ok: true,
+    value: {
+      election: election.toObject(),
+      summary: summarizeElection(election),
+    },
+  };
+}
+
 async function addBallot(electionId, payload) {
   await ensureSeedData();
   const election = await Election.findOne({ id: electionId });
@@ -258,6 +283,7 @@ module.exports = {
   listElections,
   getElectionById,
   createElection,
+  updateElectionName,
   addBallot,
   updateBallot,
   deleteBallot,

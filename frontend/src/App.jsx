@@ -462,6 +462,43 @@ function App() {
     }
   }
 
+  const renameElection = async (nextName) => {
+    if (!activeElection || !isAdmin) {
+      return
+    }
+
+    const trimmed = String(nextName ?? '').trim()
+    if (!trimmed) {
+      setNotice('Tên cuộc bầu cử không được để trống.')
+      return
+    }
+
+    if (trimmed === activeElection.name) {
+      return
+    }
+
+    try {
+      setBusy(true)
+      const response = await withAuth(() =>
+        requestJson(`${API_BASE_URL}/elections/${activeElection.id}/name`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: trimmed }),
+        }),
+      )
+      if (!response) {
+        return
+      }
+
+      await Promise.all([loadElectionDetail(activeElection.id), loadElections()])
+      setNotice('Đã cập nhật tên cuộc bầu cử.')
+    } catch (error) {
+      setNotice(`Không thể cập nhật tên cuộc bầu cử: ${error.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   const openBallotDetail = (ballot) => {
     window.history.pushState({ screen: 'ballot-detail' }, '')
     setSelectedBallot(ballot)
@@ -680,6 +717,7 @@ function App() {
       ) : (
         <WorkspacePage
           activeElection={activeElection}
+          isAdmin={isAdmin}
           totalBallots={totalBallots}
           totalTrustVotes={totalTrustVotes}
           stats={stats}
@@ -699,6 +737,7 @@ function App() {
           toggleSelectAllFiltered={toggleSelectAllFiltered}
           clearSelectedBallots={clearSelectedBallots}
           deleteSelectedBallots={deleteSelectedBallots}
+          renameElection={renameElection}
           setStackModalOpen={setStackModalOpen}
           crossOutHandlers={{
             busy,

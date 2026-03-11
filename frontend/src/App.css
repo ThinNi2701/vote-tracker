@@ -87,6 +87,18 @@
   font-size: 1.25rem;
 }
 
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.section-title-row h2 {
+  margin: 0;
+}
+
 .election-list {
   display: grid;
   gap: 10px;
