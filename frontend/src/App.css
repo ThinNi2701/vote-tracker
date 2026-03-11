@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 28px;
   color: var(--ink-strong);
+  
 }
 
 .app-header {
@@ -375,6 +376,80 @@ button:hover {
   border: 1px solid var(--border-color);
   box-shadow: 0 22px 60px rgba(15, 30, 37, 0.25);
   padding: 18px;
+}
+
+.stack-box-list {
+  display: grid;
+  gap: 10px;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.stack-box {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px;
+  background: #f9fdff;
+}
+
+.stack-box-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.stack-box-title {
+  margin: 0 0 4px;
+}
+
+.stack-box-actions {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.stack-box-actions button {
+  white-space: nowrap;
+}
+
+.stack-ballot-list {
+  margin-top: 8px;
+  border-top: 1px dashed #d7e6ec;
+  padding-top: 8px;
+  display: grid;
+  gap: 6px;
+  max-height: 180px;
+  overflow: auto;
+}
+
+.stack-ballot-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #e3eef3;
+  border-radius: 8px;
+  padding: 7px 8px;
+  background: #fff;
+}
+
+.stack-detail-card {
+  margin-top: 12px;
+  border: 1px solid #d8e5eb;
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(233, 245, 249, 0.95));
+}
+
+.stack-detail-card h4 {
+  margin: 0 0 8px;
+}
+
+.stack-detail-card ul {
+  margin: 0;
+  padding-left: 16px;
+  line-height: 1.8;
 }
 
 .modal-panel h3 {

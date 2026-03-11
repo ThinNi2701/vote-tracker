@@ -1,0 +1,195 @@
+function WorkspacePage({
+  activeElection,
+  totalBallots,
+  totalTrustVotes,
+  stats,
+  invalidBallots,
+  selectedNow,
+  currentBallotValid,
+  stackSummary,
+  ballotsWithNumber,
+  filteredBallots,
+  selectedStack,
+  setSelectedStack,
+  selectedBallotFilter,
+  setSelectedBallotFilter,
+  invalidDetailOptions,
+  setStackModalOpen,
+  crossOutHandlers,
+}) {
+  const {
+    busy,
+    crossedOut,
+    submitBallot,
+    clearBallot,
+    openBallotDetail,
+    toggleCandidate,
+  } = crossOutHandlers
+
+  return (
+    <main className="workspace-grid">
+      <section className="panel stats-panel">
+        <h2>{activeElection?.name ?? 'Chưa có cuộc bầu cử'}</h2>
+        <ul>
+          <li>Tổng số lá phiếu đã điền: {totalBallots}</li>
+          <li>Tổng số phiếu tín nhiệm: {totalTrustVotes}</li>
+          <li>Phiếu hợp lệ: {stats.validBallots}</li>
+          <li>Phiếu thiếu (vẫn hợp lệ): {stats.shortBallots}</li>
+          <li>Phiếu không hợp lệ: {invalidBallots}</li>
+          <li>
+            Đang chọn: {selectedNow.length}/{activeElection?.picksAllowed ?? 0}
+          </li>
+        </ul>
+
+        <div className="ballot-log">
+          <h3>Phân loại phiếu không hợp lệ</h3>
+          {Object.keys(stats.invalidBuckets).length === 0 ? (
+            <p className="muted">Chưa có phiếu không hợp lệ.</p>
+          ) : (
+            <div className="ballot-log-list">
+              {Object.entries(stats.invalidBuckets).map(([label, count]) => (
+                <div key={label} className="ballot-log-item">
+                  <span>{label}</span>
+                  <small>{count} phiếu</small>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className={`ballot-state ${currentBallotValid ? 'ok' : 'warn'}`}>
+          {currentBallotValid
+            ? selectedNow.length === (activeElection?.picksAllowed ?? 0)
+              ? 'Lá phiếu hiện tại hợp lệ, có thể lưu.'
+              : 'Lá phiếu hiện tại là phiếu thiếu, vẫn hợp lệ và được tính tỉ lệ.'
+            : `Đang chọn quá số lượng cho phép (${activeElection?.picksAllowed ?? 0}).`}
+        </div>
+
+        <div className="ballot-log">
+          <h3>Thông tin xấp phiếu</h3>
+          <button
+            type="button"
+            onClick={() => {
+              window.history.pushState({ screen: 'stack-detail' }, '')
+              setStackModalOpen(true)
+            }}
+          >
+            Mở bảng xấp và thông tin chi tiết
+          </button>
+        </div>
+
+        <div className="ballot-log">
+          <h3>Phiếu đã nhập (ID từ 1 đến N)</h3>
+          {ballotsWithNumber.length === 0 ? (
+            <p className="muted">Chưa có lá phiếu nào.</p>
+          ) : (
+            <>
+              <label className="stack-filter">
+                Chọn xấp (dropdown)
+                <select value={selectedStack} onChange={(event) => setSelectedStack(event.target.value)}>
+                  <option value="all">Tất cả các xấp</option>
+                  {stackSummary.map((stack) => (
+                    <option key={`opt-${stack.stackNumber}`} value={stack.stackNumber}>
+                      Xấp {stack.stackNumber} - {stack.statusText}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="stack-filter">
+                Lọc trạng thái phiếu
+                <select
+                  value={selectedBallotFilter}
+                  onChange={(event) => setSelectedBallotFilter(event.target.value)}
+                >
+                  <option value="all">Tất cả</option>
+                  <option value="valid">Chỉ phiếu hợp lệ</option>
+                  {invalidDetailOptions.map((detail) => (
+                    <option key={`invalid-detail-${detail}`} value={`detail:${detail}`}>
+                      Phiếu {detail.toLowerCase()}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="ballot-log-list">
+                {filteredBallots.length === 0 ? (
+                  <p className="muted">Không có phiếu phù hợp với bộ lọc hiện tại.</p>
+                ) : (
+                  filteredBallots.map((ballot) => (
+                    <button
+                      key={`${ballot.id}-${ballot.displayNumber}`}
+                      type="button"
+                      className="ballot-log-item"
+                      onClick={() => openBallotDetail(ballot)}
+                    >
+                      <span>
+                        Phiếu #{ballot.displayNumber} • Xấp {ballot.stackNumber} (STT {ballot.stackIndex}/50)
+                      </span>
+                      <small>{ballot.status.label}</small>
+                    </button>
+                  ))
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      <section className="panel ballot-panel">
+        <h2>Phiếu mô phỏng</h2>
+        <div className="ballot-paper">
+          <p className="ballot-title">Danh sách ứng cử viên</p>
+          {(activeElection?.candidates ?? []).map((name, index) => (
+            <button
+              type="button"
+              key={name}
+              className={`candidate-line ${crossedOut.has(name) ? 'crossed' : ''}`}
+              onClick={() => toggleCandidate(name)}
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
+              <span>{name}</span>
+              <small>{crossedOut.has(name) ? 'Đã gạch' : 'Còn hiệu lực'}</small>
+            </button>
+          ))}
+
+          <div className="action-row inside-ballot-actions">
+            <button type="button" className="primary-btn" onClick={submitBallot} disabled={busy}>
+              {busy ? 'Đang xử lý...' : 'Lưu phiếu'}
+            </button>
+            <button type="button" onClick={clearBallot} disabled={busy}>
+              Làm mới phiếu
+            </button>
+          </div>
+        </div>
+
+        <div className="chart-card">
+          <h3>Biểu đồ tỉ lệ đại biểu</h3>
+          {stats.validBallots === 0 ? (
+            <p className="muted">Chưa có phiếu hợp lệ để tính tỉ lệ.</p>
+          ) : (
+            <div className="chart-stack">
+              {stats.sorted.map((item, index) => (
+                <div key={item.name} className="bar-row enhanced">
+                  <div className="bar-label">
+                    <span>
+                      #{index + 1} {item.name}
+                    </span>
+                    <strong>
+                      {item.votes} phiếu ({item.ratio.toFixed(1)}%)
+                    </strong>
+                  </div>
+                  <div className="bar-track">
+                    <div className="bar-fill" style={{ width: `${item.ratio}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+  )
+}
+
+export default WorkspacePage
