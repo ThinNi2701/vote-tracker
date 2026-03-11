@@ -235,6 +235,25 @@ button:hover {
   text-align: left;
 }
 
+.ballot-log-item.with-check {
+  gap: 10px;
+}
+
+.ballot-open-btn {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+}
+
+.ballot-bulk-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
 .ballot-panel {
   position: relative;
   overflow: hidden;

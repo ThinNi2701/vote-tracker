@@ -35,6 +35,7 @@ function App() {
   const [editCrossedOut, setEditCrossedOut] = useState(new Set())
   const [selectedStack, setSelectedStack] = useState('all')
   const [selectedBallotFilter, setSelectedBallotFilter] = useState('all')
+  const [selectedBallotNumbers, setSelectedBallotNumbers] = useState(new Set())
   const [newElection, setNewElection] = useState({
     name: '',
     seats: 5,
@@ -168,7 +169,16 @@ function App() {
   useEffect(() => {
     setSelectedStack('all')
     setSelectedBallotFilter('all')
+    setSelectedBallotNumbers(new Set())
   }, [activeElectionId])
+
+  useEffect(() => {
+    const visibleNumbers = new Set(ballotsWithNumber.map((item) => item.displayNumber))
+    setSelectedBallotNumbers((prev) => {
+      const next = new Set([...prev].filter((num) => visibleNumbers.has(num)))
+      return next.size === prev.size ? prev : next
+    })
+  }, [ballotsWithNumber])
 
   useEffect(() => {
     const handlePopState = () => {
@@ -512,6 +522,77 @@ function App() {
     }
   }
 
+  const toggleBallotSelection = (displayNumber) => {
+    setSelectedBallotNumbers((prev) => {
+      const next = new Set(prev)
+      if (next.has(displayNumber)) {
+        next.delete(displayNumber)
+      } else {
+        next.add(displayNumber)
+      }
+      return next
+    })
+  }
+
+  const clearSelectedBallots = () => {
+    setSelectedBallotNumbers(new Set())
+  }
+
+  const toggleSelectAllFiltered = () => {
+    const filteredNumbers = filteredBallots.map((item) => item.displayNumber)
+    const isAllSelected =
+      filteredNumbers.length > 0 && filteredNumbers.every((number) => selectedBallotNumbers.has(number))
+
+    setSelectedBallotNumbers((prev) => {
+      const next = new Set(prev)
+      if (isAllSelected) {
+        filteredNumbers.forEach((number) => next.delete(number))
+      } else {
+        filteredNumbers.forEach((number) => next.add(number))
+      }
+      return next
+    })
+  }
+
+  const deleteSelectedBallots = async () => {
+    if (!activeElection || selectedBallotNumbers.size === 0) {
+      return
+    }
+
+    const selectedNumbers = Array.from(selectedBallotNumbers).sort((a, b) => b - a)
+    const willDelete = window.confirm(`Bạn có chắc muốn xóa ${selectedNumbers.length} phiếu đã chọn không?`)
+    if (!willDelete) {
+      return
+    }
+
+    try {
+      setBusy(true)
+
+      for (const number of selectedNumbers) {
+        const result = await withAuth(() =>
+          requestJson(`${API_BASE_URL}/elections/${activeElection.id}/ballots/${number}`, {
+            method: 'DELETE',
+          }),
+        )
+        if (!result) {
+          return
+        }
+      }
+
+      await Promise.all([loadElectionDetail(activeElection.id), loadElections()])
+      if (selectedBallot && selectedNumbers.includes(selectedBallot.displayNumber)) {
+        setSelectedBallot(null)
+        setEditingBallot(false)
+      }
+      setSelectedBallotNumbers(new Set())
+      setNotice(`Đã xóa ${selectedNumbers.length} phiếu đã chọn.`)
+    } catch (error) {
+      setNotice(`Không thể xóa phiếu đã chọn: ${error.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   if (!token) {
     return (
       <LoginPage
@@ -576,6 +657,11 @@ function App() {
           selectedBallotFilter={selectedBallotFilter}
           setSelectedBallotFilter={setSelectedBallotFilter}
           invalidDetailOptions={invalidDetailOptions}
+          selectedBallotNumbers={selectedBallotNumbers}
+          toggleBallotSelection={toggleBallotSelection}
+          toggleSelectAllFiltered={toggleSelectAllFiltered}
+          clearSelectedBallots={clearSelectedBallots}
+          deleteSelectedBallots={deleteSelectedBallots}
           setStackModalOpen={setStackModalOpen}
           crossOutHandlers={{
             busy,

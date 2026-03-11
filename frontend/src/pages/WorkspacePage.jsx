@@ -14,6 +14,11 @@ function WorkspacePage({
   selectedBallotFilter,
   setSelectedBallotFilter,
   invalidDetailOptions,
+  selectedBallotNumbers,
+  toggleBallotSelection,
+  toggleSelectAllFiltered,
+  clearSelectedBallots,
+  deleteSelectedBallots,
   setStackModalOpen,
   crossOutHandlers,
 }) {
@@ -112,22 +117,47 @@ function WorkspacePage({
                 </select>
               </label>
 
+              <div className="ballot-bulk-actions">
+                <small>Đã chọn: {selectedBallotNumbers.size} phiếu</small>
+                <button type="button" onClick={toggleSelectAllFiltered} disabled={filteredBallots.length === 0}>
+                  Chọn/Bỏ chọn tất cả theo bộ lọc
+                </button>
+                <button type="button" onClick={clearSelectedBallots} disabled={selectedBallotNumbers.size === 0}>
+                  Bỏ chọn tất cả
+                </button>
+                <button
+                  type="button"
+                  className="danger-btn"
+                  onClick={deleteSelectedBallots}
+                  disabled={selectedBallotNumbers.size === 0 || busy}
+                >
+                  Xóa phiếu đã chọn
+                </button>
+              </div>
+
               <div className="ballot-log-list">
                 {filteredBallots.length === 0 ? (
                   <p className="muted">Không có phiếu phù hợp với bộ lọc hiện tại.</p>
                 ) : (
                   filteredBallots.map((ballot) => (
-                    <button
-                      key={`${ballot.id}-${ballot.displayNumber}`}
-                      type="button"
-                      className="ballot-log-item"
-                      onClick={() => openBallotDetail(ballot)}
-                    >
-                      <span>
-                        Phiếu #{ballot.displayNumber} • Xấp {ballot.stackNumber} (STT {ballot.stackIndex}/50)
-                      </span>
-                      <small>{ballot.status.label}</small>
-                    </button>
+                    <div key={`${ballot.id}-${ballot.displayNumber}`} className="ballot-log-item with-check">
+                      <input
+                        type="checkbox"
+                        checked={selectedBallotNumbers.has(ballot.displayNumber)}
+                        onChange={() => toggleBallotSelection(ballot.displayNumber)}
+                        aria-label={`Chọn phiếu #${ballot.displayNumber}`}
+                      />
+                      <button
+                        type="button"
+                        className="ballot-open-btn"
+                        onClick={() => openBallotDetail(ballot)}
+                      >
+                        <span>
+                          Phiếu #{ballot.displayNumber} • Xấp {ballot.stackNumber} (STT {ballot.stackIndex}/50)
+                        </span>
+                        <small>{ballot.status.label}</small>
+                      </button>
+                    </div>
                   ))
                 )}
               </div>
