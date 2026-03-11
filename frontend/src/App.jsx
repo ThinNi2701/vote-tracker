@@ -654,7 +654,7 @@ function App() {
     <div className="app-shell">
       <header className="app-header">
         <p className="eyebrow">Vote Tracker</p>
-        <h1>Hệ thống kiểm phiếu trực quan</h1>
+        <h1>Hệ thống kiểm phiếu Online</h1>
         <p>
           Xin chào {currentUser?.name} ({currentUser?.role === 'admin' ? 'Quản trị' : 'Kiểm phiếu'})
         </p>
@@ -747,7 +747,7 @@ function App() {
           {activeElection?.picksAllowed ?? 0}.
         </p>
         <p style={{textAlign: 'right', fontStyle: 'italic'}}>
-            © 2026 - Phát triển bởi Nguyen Bao Thien
+            © 2026 - Develop by Nguyen Bao Thien
         </p>
       </footer>
     </div>
