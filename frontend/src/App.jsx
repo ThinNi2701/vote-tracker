@@ -222,19 +222,26 @@ function App() {
 
   useEffect(() => {
     const handlePopState = () => {
-      setScreen((prev) => {
-        if (prev === 'workspace') {
-          setSelectedBallot(null)
-          setStackModalOpen(false)
-          return 'hub'
-        }
-        return prev
-      })
+      if (selectedBallot) {
+        setSelectedBallot(null)
+        setEditingBallot(false)
+        return
+      }
+
+      if (stackModalOpen) {
+        setStackModalOpen(false)
+        return
+      }
+
+      if (screen === 'workspace') {
+        setScreen('hub')
+        setNotice('')
+      }
     }
 
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
+  }, [screen, selectedBallot, stackModalOpen])
 
   const withAuth = async (action) => {
     try {
@@ -431,9 +438,7 @@ function App() {
     try {
       setBusy(true)
       await loadElectionDetail(id)
-      if (screen !== 'workspace') {
-        window.history.pushState({ screen: 'workspace' }, '')
-      }
+      window.history.pushState({ screen: 'workspace' }, '')
       setScreen('workspace')
       setSelectedBallot(null)
       setNotice('')
@@ -475,6 +480,7 @@ function App() {
   }
 
   const openBallotDetail = (ballot) => {
+    window.history.pushState({ screen: 'ballot-detail' }, '')
     setSelectedBallot(ballot)
     setEditingBallot(false)
     setEditCrossedOut(new Set(ballot.crossedOut ?? []))
@@ -733,7 +739,13 @@ function App() {
 
             <div className="ballot-log">
               <h3>Thông tin xấp phiếu</h3>
-              <button type="button" onClick={() => setStackModalOpen(true)}>
+              <button
+                type="button"
+                onClick={() => {
+                  window.history.pushState({ screen: 'stack-detail' }, '')
+                  setStackModalOpen(true)
+                }}
+              >
                 Mở bảng xấp và thông tin chi tiết
               </button>
             </div>
