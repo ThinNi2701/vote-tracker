@@ -5,6 +5,7 @@ const {
   createElection,
   addBallot,
   updateBallot,
+  deleteBallot,
   deleteElection,
 } = require('../data/elections.store');
 const { requireAuth, requireRole } = require('../middleware/auth.middleware');
@@ -67,6 +68,18 @@ router.put('/:id/ballots/:ballotNumber', async (req, res) => {
     return res.json(result.value);
   } catch (error) {
     return res.status(500).json({ message: 'Không thể cập nhật lá phiếu.', detail: error.message });
+  }
+});
+
+router.delete('/:id/ballots/:ballotNumber', async (req, res) => {
+  try {
+    const result = await deleteBallot(req.params.id, req.params.ballotNumber);
+    if (!result.ok) {
+      return res.status(result.code ?? 400).json({ message: result.message });
+    }
+    return res.json({ message: 'Đã xóa lá phiếu thành công.', ...result.value });
+  } catch (error) {
+    return res.status(500).json({ message: 'Không thể xóa lá phiếu.', detail: error.message });
   }
 });
 

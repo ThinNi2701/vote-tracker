@@ -540,6 +540,42 @@ function App() {
     }
   }
 
+  const deleteBallotItem = async () => {
+    if (!activeElection || !selectedBallot) {
+      return
+    }
+
+    const willDelete = window.confirm(
+      `Bạn có chắc muốn xóa phiếu #${selectedBallot.displayNumber} không?`,
+    )
+    if (!willDelete) {
+      return
+    }
+
+    try {
+      setBusy(true)
+      const response = await withAuth(() =>
+        requestJson(
+          `${API_BASE_URL}/elections/${activeElection.id}/ballots/${selectedBallot.displayNumber}`,
+          { method: 'DELETE' },
+          token,
+        ),
+      )
+      if (!response) {
+        return
+      }
+
+      await Promise.all([loadElectionDetail(activeElection.id), loadElections()])
+      setSelectedBallot(null)
+      setEditingBallot(false)
+      setNotice(`Đã xóa phiếu #${selectedBallot.displayNumber}.`)
+    } catch (error) {
+      setNotice(`Không thể xóa lá phiếu: ${error.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   if (!token) {
     return (
       <div className="app-shell">
@@ -902,15 +938,20 @@ function App() {
                   </button>
                 </>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditingBallot(true)
-                    setEditCrossedOut(new Set(selectedBallot.crossedOut ?? []))
-                  }}
-                >
-                  Chỉnh sửa phiếu này
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingBallot(true)
+                      setEditCrossedOut(new Set(selectedBallot.crossedOut ?? []))
+                    }}
+                  >
+                    Chỉnh sửa phiếu này
+                  </button>
+                  <button type="button" className="danger-btn" onClick={deleteBallotItem} disabled={busy}>
+                    Xóa phiếu này
+                  </button>
+                </>
               )}
               <button
                 type="button"

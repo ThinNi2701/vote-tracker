@@ -204,6 +204,45 @@ async function updateBallot(electionId, ballotNumber, payload) {
   };
 }
 
+async function deleteBallot(electionId, ballotNumber) {
+  await ensureSeedData();
+  const election = await Election.findOne({ id: electionId });
+
+  if (!election) {
+    return { ok: false, code: 404, message: 'Không tìm thấy cuộc bầu cử.' };
+  }
+
+  const number = Number(ballotNumber);
+  if (!Number.isInteger(number) || number <= 0) {
+    return { ok: false, code: 400, message: 'ID phiếu không hợp lệ.' };
+  }
+
+  const targetIndex = election.ballots.findIndex((item, index) => {
+    const currentNumber = item.ballotNumber || index + 1;
+    return currentNumber === number;
+  });
+
+  if (targetIndex === -1) {
+    return { ok: false, code: 404, message: 'Không tìm thấy lá phiếu cần xóa.' };
+  }
+
+  election.ballots.splice(targetIndex, 1);
+
+  election.ballots.forEach((item, index) => {
+    item.ballotNumber = index + 1;
+  });
+
+  await election.save();
+
+  return {
+    ok: true,
+    value: {
+      deletedBallotNumber: number,
+      summary: summarizeElection(election),
+    },
+  };
+}
+
 async function deleteElection(electionId) {
   await ensureSeedData();
   const deleted = await Election.findOneAndDelete({ id: electionId });
@@ -221,5 +260,6 @@ module.exports = {
   createElection,
   addBallot,
   updateBallot,
+  deleteBallot,
   deleteElection,
 };
