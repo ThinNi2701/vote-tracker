@@ -68,6 +68,7 @@ export function classifyBallot(ballot, picksAllowed) {
 export function computeBallotStats(election) {
   const voteMap = Object.fromEntries((election.candidates || []).map((name) => [name, 0]))
   const invalidBuckets = {}
+  const shortBuckets = {}
   let validBallots = 0
   let shortBallots = 0
 
@@ -78,6 +79,8 @@ export function computeBallotStats(election) {
       validBallots += 1
       if (ballotStatus.isShort) {
         shortBallots += 1
+        const shortLabel = ballotStatus.detailLabel
+        shortBuckets[shortLabel] = (shortBuckets[shortLabel] || 0) + 1
       }
       ;(ballot.selected || []).forEach((name) => {
         voteMap[name] = (voteMap[name] || 0) + 1
@@ -97,7 +100,7 @@ export function computeBallotStats(election) {
     }))
     .sort((a, b) => b.votes - a.votes)
 
-  return { validBallots, shortBallots, sorted, invalidBuckets }
+  return { validBallots, shortBallots, sorted, invalidBuckets, shortBuckets }
 }
 
 export function buildBallotsWithMeta(election) {

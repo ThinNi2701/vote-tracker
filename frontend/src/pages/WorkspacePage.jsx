@@ -35,9 +35,18 @@ function WorkspacePage({
     <main className="workspace-grid">
       <section className="panel stats-panel">
         <h2>{activeElection?.name ?? 'Chưa có cuộc bầu cử'}</h2>
+        <div className="metric-bubbles" role="status" aria-label="Tổng quan phiếu bầu">
+          <div className="metric-bubble ballots">
+            <span>Tổng số phiếu</span>
+            <strong>{totalBallots}</strong>
+          </div>
+          <div className="metric-bubble trust">
+            <span>Tổng tín nhiệm</span>
+            <strong>{totalTrustVotes}</strong>
+          </div>
+        </div>
+
         <ul>
-          <li>Tổng số lá phiếu đã điền: {totalBallots}</li>
-          <li>Tổng số phiếu tín nhiệm: {totalTrustVotes}</li>
           <li>Phiếu hợp lệ: {stats.validBallots}</li>
           <li>Phiếu thiếu (vẫn hợp lệ): {stats.shortBallots}</li>
           <li>Phiếu không hợp lệ: {invalidBallots}</li>
@@ -47,12 +56,12 @@ function WorkspacePage({
         </ul>
 
         <div className="ballot-log">
-          <h3>Phân loại phiếu không hợp lệ</h3>
-          {Object.keys(stats.invalidBuckets).length === 0 ? (
-            <p className="muted">Chưa có phiếu không hợp lệ.</p>
+          <h3>Phân loại phiếu thiếu</h3>
+          {Object.keys(stats.shortBuckets).length === 0 ? (
+            <p className="muted">Chưa có phiếu thiếu.</p>
           ) : (
             <div className="ballot-log-list">
-              {Object.entries(stats.invalidBuckets).map(([label, count]) => (
+              {Object.entries(stats.shortBuckets).map(([label, count]) => (
                 <div key={label} className="ballot-log-item">
                   <span>{label}</span>
                   <small>{count} phiếu</small>
