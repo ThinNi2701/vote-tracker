@@ -1,19 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
-import './App.css'
+import './assets/styles/App.css'
 import LoginPage from './pages/LoginPage'
 import HubPage from './pages/HubPage'
 import WorkspacePage from './pages/WorkspacePage'
 import BallotDetailModal from './components/BallotDetailModal'
 import StackSummaryModal from './components/StackSummaryModal'
+import MainLayout from './layout/MainLayout'
+import { requestJsonFactory } from './api/httpClient'
+import { API_BASE_URL, SESSION_KEY } from './data/constants'
 import {
   buildBallotsWithMeta,
   classifyBallot,
   computeBallotStats,
-  requestJsonFactory,
-} from './utils/voteUtils'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/api'
-const SESSION_KEY = 'vote-tracker-session'
+} from './services/ballot.service'
 
 function App() {
   const [token, setToken] = useState('')
@@ -164,6 +163,10 @@ function App() {
 
     if (selectedBallotFilter === 'valid') {
       return list.filter((item) => item.status.isValid)
+    }
+
+    if (selectedBallotFilter === 'invalid') {
+      return list.filter((item) => !item.status.isValid)
     }
 
     if (selectedBallotFilter.startsWith('detail:')) {
@@ -716,7 +719,8 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
+    <MainLayout
+      header={
       <header className="app-header">
         <p className="eyebrow">Vote Tracker</p>
         <h1>Hệ thống kiểm phiếu Online</h1>
@@ -729,6 +733,19 @@ function App() {
           </button>
         </div>
       </header>
+      }
+      footer={
+      <footer className="app-footer">
+        <p>
+          Cấu trúc phiếu: tổng đại biểu {activeElection?.seats ?? 0}, được chọn{' '}
+          {activeElection?.picksAllowed ?? 0}.
+        </p>
+        <p style={{textAlign: 'right', fontStyle: 'italic'}}>
+            © 2026 - Develop by Nguyen Bao Thien
+        </p>
+      </footer>
+      }
+    >
 
       {screen === 'hub' ? (
         <HubPage
@@ -808,16 +825,7 @@ function App() {
         closeModal={() => setStackModalOpen(false)}
       />
 
-      <footer className="app-footer">
-        <p>
-          Cấu trúc phiếu: tổng đại biểu {activeElection?.seats ?? 0}, được chọn{' '}
-          {activeElection?.picksAllowed ?? 0}.
-        </p>
-        <p style={{textAlign: 'right', fontStyle: 'italic'}}>
-            © 2026 - Develop by Nguyen Bao Thien
-        </p>
-      </footer>
-    </div>
+    </MainLayout>
   )
 }
 

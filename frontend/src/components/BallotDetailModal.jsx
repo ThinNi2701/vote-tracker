@@ -1,4 +1,5 @@
-import { classifyBallot, formatDateTime } from '../utils/voteUtils'
+import { classifyBallot } from '../services/ballot.service'
+import { formatDateTime } from '../utils/dateTime'
 
 function BallotDetailModal({
   selectedBallot,

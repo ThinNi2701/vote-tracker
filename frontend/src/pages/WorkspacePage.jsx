@@ -173,6 +173,7 @@ function WorkspacePage({
                 >
                   <option value="all">Tất cả</option>
                   <option value="valid">Chỉ phiếu hợp lệ</option>
+                  <option value="invalid">Chỉ phiếu không hợp lệ</option>
                   {invalidDetailOptions.map((detail) => (
                     <option key={`invalid-detail-${detail}`} value={`detail:${detail}`}>
                       Phiếu {detail.toLowerCase()}
