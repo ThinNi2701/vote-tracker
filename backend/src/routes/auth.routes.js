@@ -1,7 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { verifyUser, getUserById } = require('../data/users.store');
-const { requireAuth } = require('../middleware/auth.middleware');
+const {
+  verifyUser,
+  getUserById,
+  listUsers,
+  createUserByAdmin,
+  setUserElectionPermissions,
+} = require('../data/users.store');
+const { requireAuth, requireRole } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
@@ -41,6 +47,39 @@ router.get('/me', requireAuth, async (req, res) => {
     return res.json(user);
   } catch (error) {
     return res.status(500).json({ message: 'Không thể tải thông tin người dùng.', detail: error.message });
+  }
+});
+
+router.get('/admin/users', requireAuth, requireRole('admin'), async (req, res) => {
+  try {
+    const users = await listUsers();
+    return res.json(users);
+  } catch (error) {
+    return res.status(500).json({ message: 'Không thể tải danh sách người dùng.', detail: error.message });
+  }
+});
+
+router.post('/admin/users', requireAuth, requireRole('admin'), async (req, res) => {
+  try {
+    const result = await createUserByAdmin(req.body);
+    if (!result.ok) {
+      return res.status(result.code ?? 400).json({ message: result.message });
+    }
+    return res.status(201).json(result.value);
+  } catch (error) {
+    return res.status(500).json({ message: 'Không thể tạo người dùng.', detail: error.message });
+  }
+});
+
+router.put('/admin/users/:id/permissions', requireAuth, requireRole('admin'), async (req, res) => {
+  try {
+    const result = await setUserElectionPermissions(req.params.id, req.body);
+    if (!result.ok) {
+      return res.status(result.code ?? 400).json({ message: result.message });
+    }
+    return res.json(result.value);
+  } catch (error) {
+    return res.status(500).json({ message: 'Không thể cập nhật phân quyền cuộc bầu cử.', detail: error.message });
   }
 });
 

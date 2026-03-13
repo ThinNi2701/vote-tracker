@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ['admin', 'user'],
     },
+    allowedElectionIds: {
+      type: [String],
+      default: [],
+    },
     passwordHash: {
       type: String,
       required: true,

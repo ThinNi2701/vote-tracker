@@ -42,6 +42,13 @@ function App() {
     picksAllowed: 3,
     candidatesText: '',
   })
+  const [managedUsers, setManagedUsers] = useState([])
+  const [permissionDrafts, setPermissionDrafts] = useState({})
+  const [newUserForm, setNewUserForm] = useState({
+    username: '',
+    name: '',
+    password: '',
+  })
 
   const isAdmin = currentUser?.role === 'admin'
   const requestJson = useMemo(() => requestJsonFactory(token), [token])
@@ -247,6 +254,32 @@ function App() {
     }
   }
 
+  const loadManagedUsers = async () => {
+    if (!isAdmin) {
+      setManagedUsers([])
+      setPermissionDrafts({})
+      return []
+    }
+
+    const users = await withAuth(() => requestJson(`${API_BASE_URL}/auth/admin/users`))
+    if (!users) {
+      return []
+    }
+
+    setManagedUsers(users)
+    setPermissionDrafts((prev) => {
+      const next = { ...prev }
+      users.forEach((user) => {
+        if (!Array.isArray(next[user.id])) {
+          next[user.id] = user.allowedElectionIds ?? []
+        }
+      })
+      return next
+    })
+
+    return users
+  }
+
   const loadElections = async () => {
     const data = await withAuth(() => requestJson(`${API_BASE_URL}/elections`))
     if (!data) {
@@ -287,6 +320,9 @@ function App() {
         } else {
           setActiveElection(null)
         }
+        if (isAdmin) {
+          await loadManagedUsers()
+        }
       } catch (error) {
         setNotice(`Không thể tải dữ liệu: ${error.message}`)
       } finally {
@@ -295,7 +331,17 @@ function App() {
     }
 
     init()
-  }, [token, authBooting])
+  }, [token, authBooting, isAdmin])
+
+  useEffect(() => {
+    if (!token || !isAdmin) {
+      setManagedUsers([])
+      setPermissionDrafts({})
+      return
+    }
+
+    loadManagedUsers()
+  }, [token, isAdmin])
 
   const login = async (event) => {
     event.preventDefault()
@@ -416,6 +462,101 @@ function App() {
       setNewElection({ name: '', seats: 5, picksAllowed: 3, candidatesText: '' })
     } catch (error) {
       setNotice(`Không thể tạo cuộc bầu cử: ${error.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const createUserAccount = async (event) => {
+    event.preventDefault()
+
+    const username = String(newUserForm.username || '').trim().toLowerCase()
+    const name = String(newUserForm.name || '').trim()
+    const password = String(newUserForm.password || '').trim()
+
+    if (!username || !name || !password) {
+      setNotice('Vui lòng nhập đầy đủ tên đăng nhập, tên hiển thị và mật khẩu.')
+      return
+    }
+
+    try {
+      setBusy(true)
+      const created = await withAuth(() =>
+        requestJson(`${API_BASE_URL}/auth/admin/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username,
+            name,
+            password,
+            role: 'user',
+          }),
+        }),
+      )
+
+      if (!created) {
+        return
+      }
+
+      setNewUserForm({ username: '', name: '', password: '' })
+      await loadManagedUsers()
+      setNotice(`Đã tạo tài khoản ${created.username}.`)
+    } catch (error) {
+      setNotice(`Không thể tạo tài khoản: ${error.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const toggleUserElectionPermission = (userId, electionId) => {
+    setPermissionDrafts((prev) => {
+      const current = Array.isArray(prev[userId])
+        ? prev[userId]
+        : managedUsers.find((item) => item.id === userId)?.allowedElectionIds || []
+
+      const has = current.includes(electionId)
+      const next = has ? current.filter((item) => item !== electionId) : [...current, electionId]
+
+      return {
+        ...prev,
+        [userId]: next,
+      }
+    })
+  }
+
+  const saveUserPermissions = async (userId) => {
+    const user = managedUsers.find((item) => item.id === userId)
+    if (!user) {
+      return
+    }
+
+    const knownElectionIds = new Set(elections.map((item) => item.id))
+    const selected = Array.from(new Set(permissionDrafts[userId] ?? user.allowedElectionIds ?? [])).filter((id) =>
+      knownElectionIds.has(id),
+    )
+
+    try {
+      setBusy(true)
+      const updated = await withAuth(() =>
+        requestJson(`${API_BASE_URL}/auth/admin/users/${userId}/permissions`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ allowedElectionIds: selected }),
+        }),
+      )
+
+      if (!updated) {
+        return
+      }
+
+      setPermissionDrafts((prev) => ({
+        ...prev,
+        [userId]: updated.allowedElectionIds ?? selected,
+      }))
+      await loadManagedUsers()
+      setNotice(`Đã cập nhật phân quyền cho ${updated.name}.`)
+    } catch (error) {
+      setNotice(`Không thể cập nhật phân quyền: ${error.message}`)
     } finally {
       setBusy(false)
     }
@@ -758,6 +899,13 @@ function App() {
           newElection={newElection}
           setNewElection={setNewElection}
           createElection={createElection}
+          managedUsers={managedUsers}
+          newUserForm={newUserForm}
+          setNewUserForm={setNewUserForm}
+          createUserAccount={createUserAccount}
+          permissionDrafts={permissionDrafts}
+          toggleUserElectionPermission={toggleUserElectionPermission}
+          saveUserPermissions={saveUserPermissions}
         />
       ) : (
         <WorkspacePage
