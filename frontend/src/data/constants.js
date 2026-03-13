@@ -4,7 +4,22 @@ const looksLikePlaceholder =
 	configuredApiBaseUrl.includes('your-backend-service') ||
 	configuredApiBaseUrl.includes('ten-service.onrender.com')
 
-export const API_BASE_URL = configuredApiBaseUrl || (import.meta.env.DEV ? 'http://localhost:5000/api' : productionApiDefault)
+function normalizeApiBaseUrl(value) {
+	const raw = String(value || '').trim().replace(/\/+$/, '')
+	if (!raw) {
+		return ''
+	}
+
+	if (raw.endsWith('/api')) {
+		return raw
+	}
+
+	return `${raw}/api`
+}
+
+const fallbackApiBaseUrl = import.meta.env.DEV ? 'http://localhost:5000/api' : productionApiDefault
+
+export const API_BASE_URL = normalizeApiBaseUrl(configuredApiBaseUrl || fallbackApiBaseUrl)
 
 export const API_BASE_URL_WARNING =
 	looksLikePlaceholder && import.meta.env.PROD
