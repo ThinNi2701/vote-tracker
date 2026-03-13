@@ -7,7 +7,7 @@ import BallotDetailModal from './components/BallotDetailModal'
 import StackSummaryModal from './components/StackSummaryModal'
 import MainLayout from './layout/MainLayout'
 import { requestJsonFactory } from './api/httpClient'
-import { API_BASE_URL, SESSION_KEY } from './data/constants'
+import { API_BASE_URL, API_BASE_URL_WARNING, SESSION_KEY } from './data/constants'
 import {
   buildBallotsWithMeta,
   classifyBallot,
@@ -52,6 +52,12 @@ function App() {
 
   const isAdmin = currentUser?.role === 'admin'
   const requestJson = useMemo(() => requestJsonFactory(token), [token])
+
+  useEffect(() => {
+    if (API_BASE_URL_WARNING) {
+      setNotice(API_BASE_URL_WARNING)
+    }
+  }, [])
 
   useEffect(() => {
     const bootstrapAuth = async () => {
