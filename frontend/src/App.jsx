@@ -869,7 +869,7 @@ function App() {
     <MainLayout
       header={
       <header className="app-header">
-        <p className="eyebrow">Vote Tracker</p>
+        <p className="eyebrow">Vote Tracker v1.0</p>
         <h1>Hệ thống kiểm phiếu Online</h1>
         <p>
           Xin chào {currentUser?.name} ({currentUser?.role === 'admin' ? 'Quản trị' : 'Kiểm phiếu'})

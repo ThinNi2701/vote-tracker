@@ -159,7 +159,7 @@ function WorkspacePage({
                   <option value="all">Tất cả các xấp</option>
                   {stackSummary.map((stack) => (
                     <option key={`opt-${stack.stackNumber}`} value={stack.stackNumber}>
-                      Xấp {stack.stackNumber} - {stack.statusText}
+                      Xấp {stack.stackNumber}
                     </option>
                   ))}
                 </select>
